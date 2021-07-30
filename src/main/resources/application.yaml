@@ -1,0 +1,20 @@
+application:
+  name: suren-firebase-poc
+  version: 1.0.0
+
+server:
+  port: 8084
+
+aws:
+  db:
+    mongodb:
+      database: ${MONGO_DB}
+      uri: "mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:27017/${MONGO_DB}?ssl=true&replicaSet=rs0&readPreference=secondaryPreferred&maxIdleTimeMS=5000"
+      ssl:
+        truststore.location: ${MONGO_JKS_PATH}
+        truststore.password: ${MONGO_JKS_PASSWORD}
+
+app.firebase-configuration-file: suren-demo-firebase-adminsdk-9mp2y-70f8361ed7.json
+
+
+logging.level.root: ${LOGGER_LEVEL:info}
