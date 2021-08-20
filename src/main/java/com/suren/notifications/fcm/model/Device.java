@@ -22,6 +22,7 @@ public class Device {
     @BsonId
     private String userId;
     private String token;
+    private String aesKey;
 
 
 }
