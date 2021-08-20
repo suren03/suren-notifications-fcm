@@ -6,6 +6,7 @@ import com.suren.notifications.fcm.model.Device;
 import com.suren.notifications.fcm.repository.DeviceDetailsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +51,26 @@ public class NotificationController {
 
         return ResponseEntity.ok().build();
     }
+
+
+    @PostMapping(value = "sendNotification")
+    public ResponseEntity sendNotification(@RequestBody NotificationRequest request) throws ExecutionException, InterruptedException {
+
+        log.info("Request - {}", request.toString());
+
+        Device device = deviceDetailsRepository.getDeviceData(request);
+
+        if(null != device && !device.getToken().isBlank()) {
+            log.info("Device Data  - {}", device.toString());
+
+            request.setToken(device.getToken());
+            String response = firebaseService.sendMessageToToken(request);
+            return ResponseEntity.ok().body(response);
+
+        } else
+            return new ResponseEntity("Device ID and encryption key Not Found", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 
     @GetMapping(value = "send")
     public ResponseEntity sendMessagesaa() throws ExecutionException, InterruptedException {
